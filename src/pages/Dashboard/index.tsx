@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Header } from '../../components/Header';
 import { api } from '../../services/api';
@@ -7,9 +7,37 @@ import { ModalAddFood } from '../../components/ModalAddFood';
 import { ModalEditFood } from '../../components/ModalEditFood';
 import { FoodsContainer } from './styles';
 
+interface IFoodsProps {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    available: boolean;
+    image: string;    
+}
+
+interface IEditFoodsProps {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    available: boolean;
+    image: string;
+  }
+
+const editFoodDefault ={
+    id: 0,
+    name: '',
+    description: '',
+    price: 0,
+    available: false,
+    image: '',
+    editModalOpen: false
+}  
+
 export function Dashboard () {
-  const [foods, setFoods] = useState([])
-  const [editingFood, setEditingFood] = useState({})
+  const [foods, setFoods] = useState<IFoodsProps[]>([])
+  const [editingFood, setEditingFood] = useState<IEditFoodsProps>(editFoodDefault)
   const [modalOpen, setModalOpen] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
   
@@ -23,14 +51,21 @@ export function Dashboard () {
       editModalOpen: false,
     }
   }*/
+  useEffect(() => {
+   async function getFoods () {
+      try {
+        const response =  await api.get('/foods');
+  
+      setFoods(response.data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getFoods();
+    
+  },[])
 
-  async function componentDidMount() {
-    const response = await api.get('/foods');
-
-    setFoods(response.data);
-  }
-
-  async function handleAddFood (food ) {
+  async function handleAddFood (food: IFoodsProps ) {
 
     try {
       const response = await api.post('/foods', {
@@ -44,7 +79,7 @@ export function Dashboard () {
     }
   }
 
-  async function handleUpdateFood (food ) {
+  async function handleUpdateFood (food: IFoodsProps) {
 
     try {
       const foodUpdated = await api.put(
@@ -62,7 +97,7 @@ export function Dashboard () {
     }
   }
 
-  async function handleDeleteFood (id ) {
+  async function handleDeleteFood (id:number ) {
 
     await api.delete(`/foods/${id}`);
 
@@ -81,8 +116,17 @@ export function Dashboard () {
     setEditModalOpen(!editModalOpen);
   }
 
-  function handleEditFood (food ) {
-    setEditingFood({food, editModalOpen: true});
+  function handleEditFood (food: IFoodsProps) {
+    const editFood ={
+      id: food.id,
+      name: food.name,
+      description: food.description,
+      price: food.price,
+      available: food.available,
+      image: food.image,
+    }
+    setEditingFood(editFood);
+    setEditModalOpen(true)
   }
 
 

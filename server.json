@@ -31,14 +31,6 @@
       "description": "Você vai adorar esta mistura",
       "available": true,
       "id": 5
-    },
-    {
-      "image": "https://storage.googleapis.com/golden-wind/bootcamp-gostack/desafio-food/food3.png",
-      "name": "Loucura",
-      "price": "99.99",
-      "description": "Um prato pra te enlouquecer",
-      "available": true,
-      "id": 6
     }
   ]
 }

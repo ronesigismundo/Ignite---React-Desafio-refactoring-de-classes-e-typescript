@@ -4,7 +4,29 @@ import { FiEdit3, FiTrash } from 'react-icons/fi';
 import { Container } from './styles';
 import { api } from '../../services/api';
 
-export function Food ({food, handleDelete, handleEditFood}) {
+export interface IFoodsProps {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  available: boolean;
+  image: string;    
+}
+
+interface IFoodProps{
+  food: IFoodsProps,
+  handleDelete: (id: number) => void;
+  handleEditFood: ({
+    id,
+    name,
+    description,
+    price,
+    available,
+    image,   
+  }:IFoodsProps) => void;
+}
+
+export function Food ({food, handleDelete, handleEditFood}: IFoodProps) {
   const [state, setState] = useState(food.available);
   /*
   constructor(props) {
@@ -36,7 +58,6 @@ export function Food ({food, handleDelete, handleEditFood}) {
   }
 
   function setEditingFood () {
-
     handleEditFood(food);
   }
 
